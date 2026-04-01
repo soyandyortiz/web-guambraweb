@@ -1,0 +1,44 @@
+{
+  "name": "GuambraWeb - Agencia de Desarrollo",
+  "short_name": "GuambraWeb",
+  "description": "Expertos en Desarrollo de Software y Páginas Web en Ecuador.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d0d0d",
+  "theme_color": "#000000",
+  "orientation": "portrait",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/icono.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icono.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icono.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["business", "productivity", "shopping"],
+  "shortcuts": [
+    {
+      "name": "Tienda",
+      "url": "/tienda",
+      "icons": [{ "src": "/icono.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Proyectos",
+      "url": "/portafolio",
+      "icons": [{ "src": "/icono.png", "sizes": "192x192" }]
+    }
+  ]
+}
