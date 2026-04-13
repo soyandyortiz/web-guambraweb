@@ -20,7 +20,7 @@ export default async function ProductosPage() {
 
   const { data: products, error } = await supabase
     .from("products")
-    .select("id, name, description, price, is_active, image_url, images, created_at, category_id, categories(name), technologies, features, versions")
+    .select("id, name, description, price, is_active, image_url, images, created_at, category_id, categories(name), technologies, features, versions, demo_url")
     .order("created_at", { ascending: false });
 
   return (

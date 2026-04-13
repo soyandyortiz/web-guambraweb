@@ -45,6 +45,7 @@ export type ProductRow = {
   technologies?: string[] | null;
   features?: string[] | null;
   versions?: { version: string; changes: string[] }[] | null;
+  demo_url?: string | null;
 };
 
 export type SimpleCategory = {
@@ -62,6 +63,7 @@ type FormData = {
   technologies: string[];
   features: string[];
   versions: { version: string; changes: string[] }[];
+  demo_url: string;
 };
 
 const INITIAL_FORM: FormData = {
@@ -73,6 +75,7 @@ const INITIAL_FORM: FormData = {
   technologies: [],
   features: [],
   versions: [],
+  demo_url: "",
 };
 
 /* ─────────────────────────────────────────
@@ -186,6 +189,7 @@ function ProductModal({
     technologies: initialData?.technologies ?? [],
     features: initialData?.features ?? [],
     versions: initialData?.versions ?? [],
+    demo_url: initialData?.demo_url ?? "",
   });
 
   const [mainCategoryId, setMainCategoryId] = useState<string>(() => {
@@ -242,6 +246,7 @@ function ProductModal({
         technologies: form.technologies,
         features: form.features,
         versions: form.versions,
+        demo_url: form.demo_url.trim() || null,
       };
 
       if (mode === "create") {
@@ -369,6 +374,20 @@ function ProductModal({
               onChange={(e) => set("description", e.target.value)}
               rows={2}
               style={{ resize: "vertical", minHeight: "60px" }}
+            />
+          </div>
+
+          {/* URL del Demo */}
+          <div>
+            <label className="block text-sm font-medium mb-1.5" style={{ color: "hsl(var(--foreground))" }}>
+              URL del Demo <span className="text-xs font-normal" style={{ color: "hsl(var(--muted-foreground))" }}>(opcional)</span>
+            </label>
+            <input
+              type="url"
+              className="input"
+              placeholder="https://demo.ejemplo.com"
+              value={form.demo_url}
+              onChange={(e) => set("demo_url", e.target.value)}
             />
           </div>
 
