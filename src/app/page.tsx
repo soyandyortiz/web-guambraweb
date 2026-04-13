@@ -12,12 +12,10 @@ import {
   AlertCircle,
   Smartphone,
   TrendingUp,
-  Settings2,
   Wrench,
-  Layout,
-  Stethoscope,
   Zap,
   ChevronRight,
+  ImageIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { Footer } from "@/components/ui/Footer";
@@ -25,6 +23,7 @@ import { PublicNav } from "@/components/ui/PublicNav";
 import { FAQAccordion } from "@/components/home/FAQAccordion";
 import { AnimateOnScroll } from "@/components/home/AnimateOnScroll";
 import { HowToBuyTimeline } from "@/components/home/HowToBuyTimeline";
+import { createClient } from "@/lib/supabase/server";
 
 const WA_LINK =
   "https://wa.me/593982650929?text=Hola%2C%20quisiera%20conocer%20m%C3%A1s%20sobre%20sus%20soluciones%20de%20software%20para%20mi%20negocio.";
@@ -43,7 +42,29 @@ export const metadata: Metadata = {
   ],
 };
 
-export default function HomePage() {
+export const revalidate = 60;
+
+const CATEGORY_COLORS: Record<string, string> = {
+  "Sitio Web": "214 100% 44%",
+  "E-commerce": "262 80% 58%",
+  "Alquiler": "38 92% 50%",
+  "Sistema de Gestión": "199 89% 48%",
+  "Clínica / Salud": "142 71% 45%",
+  "Restaurante": "16 100% 50%",
+  "Otro": "220 15% 55%",
+};
+
+export default async function HomePage() {
+  const supabase = await createClient();
+  const { data: featuredProjects } = await supabase
+    .from("portfolio_projects")
+    .select("id, title, slug, category, client_name, short_description, cover_image, tech_stack, is_featured")
+    .eq("is_published", true)
+    .order("is_featured", { ascending: false })
+    .order("order_index", { ascending: true })
+    .limit(3);
+
+  const projects = featuredProjects ?? [];
   return (
     <div className="min-h-screen font-sans" style={{ background: "hsl(var(--background))" }}>
       <PublicNav />
@@ -373,102 +394,135 @@ export default function HomePage() {
       </section>
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-          4. PRUEBA SOCIAL
+          4. PRUEBA SOCIAL — proyectos reales
       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      <section className="py-24" style={{ background: "hsl(var(--card))" }}>
-        <div className="max-w-6xl mx-auto px-6">
-          <AnimateOnScroll className="text-center mb-14">
-            <p className="text-sm font-bold uppercase tracking-widest mb-3" style={{ color: "hsl(var(--primary))" }}>
-              Resultados reales
-            </p>
-            <h2 className="text-3xl md:text-4xl font-display font-extrabold tracking-tight mb-4" style={{ color: "hsl(var(--foreground))" }}>
-              Proyectos que ya generan resultados
-            </h2>
-            <p className="text-lg max-w-xl mx-auto" style={{ color: "hsl(var(--muted-foreground))" }}>
-              Negocios en Ecuador que confiaron en GuambraWeb para crecer.
-            </p>
-          </AnimateOnScroll>
+      {projects.length > 0 && (
+        <section className="py-24" style={{ background: "hsl(var(--card))" }}>
+          <div className="max-w-6xl mx-auto px-6">
+            <AnimateOnScroll className="text-center mb-14">
+              <p className="text-sm font-bold uppercase tracking-widest mb-3" style={{ color: "hsl(var(--primary))" }}>
+                Resultados reales
+              </p>
+              <h2 className="text-3xl md:text-4xl font-display font-extrabold tracking-tight mb-4" style={{ color: "hsl(var(--foreground))" }}>
+                Proyectos que ya generan resultados
+              </h2>
+              <p className="text-lg max-w-xl mx-auto" style={{ color: "hsl(var(--muted-foreground))" }}>
+                Negocios en Ecuador que confiaron en GuambraWeb para crecer.
+              </p>
+            </AnimateOnScroll>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              {
-                icon: Layout,
-                client: "Chakana Ecuador",
-                type: "Catálogo Digital",
-                result: "Mayor visibilidad online con SEO optimizado y catálogo profesional que genera contactos.",
-                url: "https://chakanaecuador.com/",
-                color: "hsl(var(--primary))",
-                delay: 0,
-              },
-              {
-                icon: Stethoscope,
-                client: "Lipoescultura Ecuador",
-                type: "Plataforma Médica",
-                result: "Captación automática de leads y citas con UX diseñada para convertir visitantes en pacientes.",
-                url: "https://lipoesculturaecuador.com/",
-                color: "hsl(262 83% 55%)",
-                delay: 120,
-              },
-              {
-                icon: Zap,
-                client: "Fibra Express",
-                type: "Web Corporativa",
-                result: "Sitio ágil para servicios de internet con conversión rápida y presencia digital sólida.",
-                url: "https://www.fibraexpress.net.ec/",
-                color: "hsl(38 92% 42%)",
-                delay: 240,
-              },
-            ].map(({ icon: Icon, client, type, result, url, color, delay }) => (
-              <AnimateOnScroll key={client} delay={delay}>
-                <div
-                  className="rounded-3xl overflow-hidden h-full flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-                  style={{ background: "hsl(var(--background))", border: "1px solid hsl(var(--border))" }}
-                >
-                  <div
-                    className="h-40 flex items-center justify-center"
-                    style={{ background: `color-mix(in srgb, ${color} 8%, hsl(var(--background)))` }}
-                  >
-                    <Icon size={56} style={{ color, opacity: 0.7 }} />
-                  </div>
-                  <div className="p-6 flex flex-col flex-1">
-                    <span
-                      className="text-xs font-bold uppercase tracking-widest mb-2"
-                      style={{ color }}
+            <div className="grid md:grid-cols-3 gap-6">
+              {projects.map((project, i) => {
+                const color = CATEGORY_COLORS[project.category] ?? "214 100% 44%";
+                const techs = Array.isArray(project.tech_stack)
+                  ? (project.tech_stack as { name: string; category: string }[]).slice(0, 3)
+                  : [];
+                return (
+                  <AnimateOnScroll key={project.id} delay={i * 120}>
+                    <Link
+                      href={`/portafolio/${project.slug}`}
+                      className="group block rounded-[2rem] overflow-hidden border transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl h-full flex flex-col"
+                      style={{
+                        background: "hsl(var(--background))",
+                        borderColor: "hsl(var(--border))",
+                      }}
                     >
-                      {type}
-                    </span>
-                    <h3 className="text-xl font-bold mb-3" style={{ color: "hsl(var(--foreground))" }}>
-                      {client}
-                    </h3>
-                    <p className="text-sm leading-relaxed flex-1 mb-5" style={{ color: "hsl(var(--muted-foreground))" }}>
-                      {result}
-                    </p>
-                    <a
-                      href={url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 text-sm font-bold hover:gap-2.5 transition-all duration-200"
-                      style={{ color }}
-                    >
-                      Visitar proyecto <ArrowRight size={15} />
-                    </a>
-                  </div>
-                </div>
-              </AnimateOnScroll>
-            ))}
+                      {/* Cover */}
+                      <div
+                        className="relative h-48 overflow-hidden flex-shrink-0"
+                        style={{ background: `hsl(${color} / 0.08)` }}
+                      >
+                        {project.cover_image ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={project.cover_image}
+                            alt={project.title}
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <ImageIcon size={40} style={{ color: `hsl(${color} / 0.3)` }} />
+                          </div>
+                        )}
+                        {/* Overlay on hover */}
+                        <div
+                          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          style={{ background: `linear-gradient(to top, hsl(${color} / 0.55) 0%, transparent 60%)` }}
+                        />
+                        {/* Category badge */}
+                        <div className="absolute top-3 left-3">
+                          <span
+                            className="px-2.5 py-1 rounded-full text-xs font-bold text-white"
+                            style={{ background: `hsl(${color})`, boxShadow: `0 4px 12px hsl(${color} / 0.4)` }}
+                          >
+                            {project.category}
+                          </span>
+                        </div>
+                        {/* Arrow */}
+                        <div
+                          className="absolute bottom-3 right-3 w-9 h-9 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0"
+                          style={{ background: `hsl(${color})` }}
+                        >
+                          <ArrowRight size={15} />
+                        </div>
+                      </div>
+
+                      {/* Body */}
+                      <div className="p-5 flex flex-col flex-1">
+                        {project.client_name && (
+                          <p className="text-xs font-semibold uppercase tracking-wider mb-1.5" style={{ color: `hsl(${color})` }}>
+                            {project.client_name}
+                          </p>
+                        )}
+                        <h3
+                          className="text-lg font-bold leading-snug mb-2 group-hover:text-primary transition-colors"
+                          style={{ color: "hsl(var(--foreground))" }}
+                        >
+                          {project.title}
+                        </h3>
+                        {project.short_description && (
+                          <p
+                            className="text-sm leading-relaxed line-clamp-2 mb-3 flex-1"
+                            style={{ color: "hsl(var(--muted-foreground))" }}
+                          >
+                            {project.short_description}
+                          </p>
+                        )}
+                        {techs.length > 0 && (
+                          <div className="flex flex-wrap gap-1.5 mt-auto">
+                            {techs.map((t) => (
+                              <span
+                                key={t.name}
+                                className="px-2 py-0.5 rounded-full text-xs font-medium"
+                                style={{
+                                  background: "hsl(var(--muted) / 0.6)",
+                                  color: "hsl(var(--muted-foreground))",
+                                }}
+                              >
+                                {t.name}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </Link>
+                  </AnimateOnScroll>
+                );
+              })}
+            </div>
+
+            <AnimateOnScroll className="mt-12 text-center" delay={100}>
+              <Link
+                href="/portafolio"
+                className="inline-flex items-center gap-2 text-sm font-bold hover:underline transition-all"
+                style={{ color: "hsl(var(--primary))" }}
+              >
+                Ver portafolio completo <ArrowRight size={15} />
+              </Link>
+            </AnimateOnScroll>
           </div>
-
-          <AnimateOnScroll className="mt-12 text-center" delay={100}>
-            <Link
-              href="/portafolio"
-              className="inline-flex items-center gap-2 text-sm font-bold hover:underline"
-              style={{ color: "hsl(var(--primary))" }}
-            >
-              Ver portafolio completo <ArrowRight size={15} />
-            </Link>
-          </AnimateOnScroll>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
           5. CÓMO FUNCIONA
