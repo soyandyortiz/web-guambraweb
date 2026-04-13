@@ -1,6 +1,5 @@
 "use client";
 
-import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
 import Link from "next/link";
 import { GuambraLogo } from "@/components/ui/GuambraLogo";
 import { CartBadge } from "@/components/tienda/CartBadge";
@@ -114,9 +113,8 @@ function TiendaLayoutContent({ children }: { children: React.ReactNode }) {
             </div>
           </nav>
 
-          {/* Right: theme + cart + mobile menu */}
+          {/* Right: cart */}
           <div className="flex items-center gap-2">
-            <ThemeSwitcher />
             <CartBadge />
           </div>
         </div>

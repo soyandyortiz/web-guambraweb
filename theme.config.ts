@@ -40,43 +40,6 @@ export type Theme = {
 };
 
 export const themes: Record<string, Theme> = {
-  blanco: {
-    name: "blanco",
-    label: "Blanco",
-    typography: {
-      // SF Pro on Apple devices, Segoe UI on Windows, Inter as web fallback
-      fontSans: "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', 'Helvetica Neue', Arial, sans-serif",
-      fontSerif: "'Georgia', 'Times New Roman', serif",
-      fontMono: "'SF Mono', 'JetBrains Mono', 'Menlo', 'Consolas', monospace",
-    },
-    colors: {
-      primary: "214 100% 44%",           // #0071e3 — Apple blue
-      primaryForeground: "0 0% 100%",
-      secondary: "215 8% 43%",           // #6e6e73 — Apple secondary gray
-      secondaryForeground: "0 0% 100%",
-      accent: "214 100% 44%",
-      accentForeground: "0 0% 100%",
-      background: "0 0% 100%",           // #ffffff — pure white
-      foreground: "0 0% 11%",            // #1d1d1f — Apple near-black text
-      card: "240 5% 96%",                // #f5f5f7 — Apple section bg
-      cardForeground: "0 0% 11%",
-      border: "240 5% 84%",              // #d2d2d7 — Apple border
-      input: "240 5% 96%",
-      ring: "214 100% 44%",
-      muted: "240 5% 96%",               // #f5f5f7
-      mutedForeground: "215 8% 43%",     // #6e6e73
-      destructive: "0 84% 50%",
-      destructiveForeground: "0 0% 100%",
-      success: "142 60% 35%",
-      successForeground: "0 0% 100%",
-      warning: "38 92% 42%",
-      warningForeground: "0 0% 100%",
-      sidebarBg: "0 0% 98%",             // near white
-      sidebarForeground: "0 0% 20%",
-      sidebarAccent: "214 100% 44%",
-      sidebarBorder: "240 5% 90%",
-    },
-  },
   perla: {
     name: "perla",
     label: "Perla",
@@ -116,7 +79,7 @@ export const themes: Record<string, Theme> = {
 };
 
 
-export const defaultTheme = "blanco";
+export const defaultTheme = "perla";
 
 export function generateCSSVariables(theme: Theme): string {
   const { colors, typography } = theme;

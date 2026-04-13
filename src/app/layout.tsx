@@ -115,20 +115,11 @@ export default function RootLayout({
             __html: `
               (function() {
                 try {
-                  const themeName = localStorage.getItem('guambra-theme') || 'blanco';
-                  const colorMap = {
-                    blanco: {
-                      '--primary': '214 100% 44%',
-                      '--background': '0 0% 100%',
-                      '--foreground': '0 0% 11%',
-                    },
-                    perla: {
+                  const colors = {
                       '--primary': '214 100% 44%',
                       '--background': '220 14% 97%',
                       '--foreground': '220 15% 14%',
-                    }
                   };
-                  const colors = colorMap[themeName] || colorMap.blanco;
                   for (const key in colors) {
                     document.documentElement.style.setProperty(key, colors[key]);
                   }

@@ -1,6 +1,5 @@
 "use client";
 
-import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
 import Link from "next/link";
 import { GuambraLogo } from "@/components/ui/GuambraLogo";
 import { useState } from "react";
@@ -76,7 +75,6 @@ export default function NosotrosClient() {
           </nav>
 
           <div className="flex items-center gap-5">
-            <ThemeSwitcher />
             <Link
               href="/tienda"
               className="btn-primary btn-sm rounded-full shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"

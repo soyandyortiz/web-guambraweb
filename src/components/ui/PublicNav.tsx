@@ -5,7 +5,6 @@ import Link from "next/link";
 import { GuambraLogo } from "@/components/ui/GuambraLogo";
 import { usePathname } from "next/navigation";
 import { ShoppingCart, Menu, X, Zap, ChevronDown, Monitor, CreditCard } from "lucide-react";
-import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
@@ -162,9 +161,8 @@ export function PublicNav() {
             </div>
           </nav>
 
-          {/* ── Desktop Right: ThemeSwitcher + Tienda ── */}
+          {/* ── Desktop Right: Tienda ── */}
           <div className="hidden md:flex items-center gap-4">
-            <ThemeSwitcher />
             <Link
               href="/tienda"
               className="btn-primary btn-sm rounded-full shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
@@ -174,9 +172,8 @@ export function PublicNav() {
             </Link>
           </div>
 
-          {/* ── Mobile Right: ThemeSwitcher + Hamburger ── */}
+          {/* ── Mobile Right: Hamburger ── */}
           <div className="flex md:hidden items-center gap-3">
-            <ThemeSwitcher />
             <button
               onClick={() => setIsOpen((o) => !o)}
               aria-label={isOpen ? "Cerrar menú" : "Abrir menú"}

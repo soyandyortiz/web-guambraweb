@@ -10,7 +10,6 @@ import {
   Settings,
   ChevronDown,
 } from "lucide-react";
-import { ThemeSwitcher } from "@/components/ui/ThemeSwitcher";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
@@ -204,10 +203,6 @@ export function AdminHeader({ onMenuClick, title = "Dashboard" }: AdminHeaderPro
 
       {/* Acciones */}
       <div className="flex items-center gap-1">
-        {/* Theme switcher */}
-        <ThemeSwitcher />
-
-
         {/* Menú usuario */}
         <div className="relative">
           <button
@@ -224,7 +219,7 @@ export function AdminHeader({ onMenuClick, title = "Dashboard" }: AdminHeaderPro
             <div
               className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
               style={{
-                background: "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)))",
+                background: "hsl(var(--primary))",
                 color: "white",
               }}
             >
