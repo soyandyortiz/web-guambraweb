@@ -40,82 +40,83 @@ export type Theme = {
 };
 
 export const themes: Record<string, Theme> = {
-  negro: {
-    name: "negro",
-    label: "Negro",
+  blanco: {
+    name: "blanco",
+    label: "Blanco",
     typography: {
-      fontSans: "'Inter', sans-serif",
-      fontSerif: "'Family', Georgia, serif",
-      fontMono: "'JetBrains Mono', monospace",
+      // SF Pro on Apple devices, Segoe UI on Windows, Inter as web fallback
+      fontSans: "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', 'Helvetica Neue', Arial, sans-serif",
+      fontSerif: "'Georgia', 'Times New Roman', serif",
+      fontMono: "'SF Mono', 'JetBrains Mono', 'Menlo', 'Consolas', monospace",
     },
     colors: {
-      primary: "199 89% 48%", // Ngrok Cyan-Blue
+      primary: "214 100% 44%",           // #0071e3 — Apple blue
       primaryForeground: "0 0% 100%",
-      secondary: "262 83% 58%",
+      secondary: "215 8% 43%",           // #6e6e73 — Apple secondary gray
       secondaryForeground: "0 0% 100%",
-      accent: "199 89% 48%",
+      accent: "214 100% 44%",
       accentForeground: "0 0% 100%",
-      background: "0 0% 7%", // Deep Dark
-      foreground: "0 0% 98%",
-      card: "0 0% 10%",
-      cardForeground: "0 0% 98%",
-      border: "0 0% 15%",
-      input: "0 0% 12%",
-      ring: "199 89% 48%",
-      muted: "0 0% 15%",
-      mutedForeground: "0 0% 65%",
-      destructive: "0 84% 60%",
+      background: "0 0% 100%",           // #ffffff — pure white
+      foreground: "0 0% 11%",            // #1d1d1f — Apple near-black text
+      card: "240 5% 96%",                // #f5f5f7 — Apple section bg
+      cardForeground: "0 0% 11%",
+      border: "240 5% 84%",              // #d2d2d7 — Apple border
+      input: "240 5% 96%",
+      ring: "214 100% 44%",
+      muted: "240 5% 96%",               // #f5f5f7
+      mutedForeground: "215 8% 43%",     // #6e6e73
+      destructive: "0 84% 50%",
       destructiveForeground: "0 0% 100%",
-      success: "142 71% 45%",
+      success: "142 60% 35%",
       successForeground: "0 0% 100%",
-      warning: "38 92% 50%",
-      warningForeground: "0 0% 10%",
-      sidebarBg: "0 0% 5%",
-      sidebarForeground: "0 0% 80%",
-      sidebarAccent: "199 89% 48%",
-      sidebarBorder: "0 0% 12%",
+      warning: "38 92% 42%",
+      warningForeground: "0 0% 100%",
+      sidebarBg: "0 0% 98%",             // near white
+      sidebarForeground: "0 0% 20%",
+      sidebarAccent: "214 100% 44%",
+      sidebarBorder: "240 5% 90%",
     },
   },
-  cian: {
-    name: "cian",
-    label: "Azul Cian",
+  perla: {
+    name: "perla",
+    label: "Perla",
     typography: {
-      fontSans: "'Inter', sans-serif",
-      fontSerif: "'Family', Georgia, serif",
-      fontMono: "'JetBrains Mono', monospace",
+      fontSans: "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', 'Helvetica Neue', Arial, sans-serif",
+      fontSerif: "'Georgia', 'Times New Roman', serif",
+      fontMono: "'SF Mono', 'JetBrains Mono', 'Menlo', 'Consolas', monospace",
     },
     colors: {
-      primary: "210 10% 60%", // Medium Grey
+      primary: "214 100% 44%",           // #0071e3 — Apple blue
       primaryForeground: "0 0% 100%",
-      secondary: "200 20% 40%",
+      secondary: "220 10% 46%",          // cool gray secondary
       secondaryForeground: "0 0% 100%",
-      accent: "210 10% 60%",
+      accent: "214 100% 44%",
       accentForeground: "0 0% 100%",
-      background: "210 50% 10%", // Deep Navy-Cyan
-      foreground: "180 20% 95%",
-      card: "210 50% 14%",
-      cardForeground: "180 20% 95%",
-      border: "210 40% 20%",
-      input: "210 40% 18%",
-      ring: "210 10% 60%",
-      muted: "210 40% 20%",
-      mutedForeground: "210 20% 60%",
-      destructive: "0 84% 60%",
+      background: "220 14% 97%",         // very light cool-gray tint
+      foreground: "220 15% 14%",         // near-black with slight blue tint
+      card: "0 0% 100%",                 // white cards on tinted bg
+      cardForeground: "220 15% 14%",
+      border: "220 10% 88%",             // light cool border
+      input: "220 10% 94%",
+      ring: "214 100% 44%",
+      muted: "220 10% 94%",
+      mutedForeground: "220 10% 46%",
+      destructive: "0 84% 50%",
       destructiveForeground: "0 0% 100%",
-      success: "142 71% 45%",
+      success: "142 60% 35%",
       successForeground: "0 0% 100%",
-      warning: "38 92% 50%",
-      warningForeground: "0 0% 10%",
-      sidebarBg: "210 50% 8%",
-      sidebarForeground: "180 20% 80%",
-      sidebarAccent: "210 10% 60%",
-      sidebarBorder: "210 40% 15%",
+      warning: "38 92% 42%",
+      warningForeground: "0 0% 100%",
+      sidebarBg: "220 14% 98%",
+      sidebarForeground: "220 15% 20%",
+      sidebarAccent: "214 100% 44%",
+      sidebarBorder: "220 10% 90%",
     },
   },
 };
 
 
-export const defaultTheme = "negro";
+export const defaultTheme = "blanco";
 
 export function generateCSSVariables(theme: Theme): string {
   const { colors, typography } = theme;

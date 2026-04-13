@@ -115,20 +115,20 @@ export default function RootLayout({
             __html: `
               (function() {
                 try {
-                  const themeName = localStorage.getItem('guambra-theme') || 'negro';
+                  const themeName = localStorage.getItem('guambra-theme') || 'blanco';
                   const colorMap = {
-                    negro: {
-                      '--primary': '228 100% 60%',
-                      '--background': '0 0% 0%',
-                      '--foreground': '0 0% 98%',
+                    blanco: {
+                      '--primary': '214 100% 44%',
+                      '--background': '0 0% 100%',
+                      '--foreground': '0 0% 11%',
                     },
-                    cian: {
-                      '--primary': '228 100% 60%',
-                      '--background': '0 0% 0%',
-                      '--foreground': '0 0% 98%',
+                    perla: {
+                      '--primary': '214 100% 44%',
+                      '--background': '220 14% 97%',
+                      '--foreground': '220 15% 14%',
                     }
                   };
-                  const colors = colorMap[themeName] || colorMap.negro;
+                  const colors = colorMap[themeName] || colorMap.blanco;
                   for (const key in colors) {
                     document.documentElement.style.setProperty(key, colors[key]);
                   }

@@ -17,7 +17,7 @@ export function MouseGlow() {
       if (!glowRef.current) return;
       glowRef.current.style.setProperty("--x", `${e.clientX}px`);
       glowRef.current.style.setProperty("--y", `${e.clientY}px`);
-      glowRef.current.style.setProperty("opacity", "0.35");
+      glowRef.current.style.setProperty("opacity", "0.18");
     };
 
     const handleMouseLeave = () => {
@@ -80,18 +80,20 @@ export function InteractiveGrid() {
         transition: "transform 0.2s cubic-bezier(0.1, 0, 0.3, 1)",
       }}
     >
-      {/* Grid Pattern */}
-      <div 
-        className="absolute inset-0 opacity-[0.03]"
+      {/* Grid Pattern — very subtle on light bg */}
+      <div
+        className="absolute inset-0 opacity-[0.04]"
         style={{
-          backgroundImage: `linear-gradient(hsl(var(--primary)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px)`,
+          backgroundImage: `linear-gradient(hsl(var(--border)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--border)) 1px, transparent 1px)`,
           backgroundSize: "40px 40px",
         }}
       />
-      
-      {/* Mesh Blooms */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary/10 blur-[120px] animate-pulse-glow" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[35%] h-[35%] rounded-full bg-secondary/10 blur-[100px] animate-pulse-glow" style={{ animationDelay: '1s' }} />
+
+      {/* Mesh Blooms — soft blue/gray tints on white */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full blur-[140px] animate-pulse-glow"
+           style={{ background: "hsl(214 100% 44% / 0.06)" }} />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[35%] h-[35%] rounded-full blur-[120px] animate-pulse-glow"
+           style={{ background: "hsl(215 8% 43% / 0.05)", animationDelay: '1s' }} />
     </div>
   );
 }

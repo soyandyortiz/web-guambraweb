@@ -41,48 +41,48 @@
 :root {
   --radius: 0.75rem;
 
-  /* Premium Dark Theme - Inspired by Ngrok */
-  --background: 0 0% 0%;
-  --foreground: 0 0% 98%;
+  /* Apple-inspired Light Theme */
+  --background: 0 0% 100%;
+  --foreground: 0 0% 11%;
 
-  --primary: 228 100% 60%;
+  --primary: 214 100% 44%;
   --primary-foreground: 0 0% 100%;
 
-  --secondary: 262 83% 58%;
+  --secondary: 215 8% 43%;
   --secondary-foreground: 0 0% 100%;
 
-  --accent: 228 100% 60%;
+  --accent: 214 100% 44%;
   --accent-foreground: 0 0% 100%;
 
-  --card: 0 0% 3%;
-  --card-foreground: 0 0% 98%;
+  --card: 240 5% 96%;
+  --card-foreground: 0 0% 11%;
 
-  --border: 0 0% 12%;
-  --input: 0 0% 8%;
-  --ring: 228 100% 60%;
+  --border: 240 5% 84%;
+  --input: 240 5% 96%;
+  --ring: 214 100% 44%;
 
-  --muted: 0 0% 8%;
-  --muted-foreground: 0 0% 60%;
+  --muted: 240 5% 96%;
+  --muted-foreground: 215 8% 43%;
 
-  --destructive: 0 84% 60%;
+  --destructive: 0 84% 50%;
   --destructive-foreground: 0 0% 100%;
 
-  --success: 142 71% 45%;
+  --success: 142 60% 35%;
   --success-foreground: 0 0% 100%;
 
-  --warning: 38 92% 50%;
-  --warning-foreground: 0 0% 10%;
+  --warning: 38 92% 42%;
+  --warning-foreground: 0 0% 100%;
 
-  --sidebar-bg: 0 0% 2%;
-  --sidebar-foreground: 0 0% 80%;
-  --sidebar-accent: 228 100% 60%;
-  --sidebar-border: 0 0% 8%;
+  --sidebar-bg: 0 0% 98%;
+  --sidebar-foreground: 0 0% 20%;
+  --sidebar-accent: 214 100% 44%;
+  --sidebar-border: 240 5% 90%;
 
-  /* Use explicit fallbacks in variables to avoid circular @theme references */
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Outfit", system-ui, sans-serif;
+  /* SF Pro on Apple devices, system-ui elsewhere, Inter as web fallback */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Helvetica Neue", Arial, sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Outfit", "Helvetica Neue", Arial, sans-serif;
   --font-mono:
-    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "SF Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     monospace;
 }
 

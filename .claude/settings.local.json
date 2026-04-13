@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -E \"\\\\.\\(json|md\\)$|^\\\\.\")",
+      "Bash(git config:*)",
+      "Bash(npx claude-code-templates@latest:*)",
+      "Bash(grep --line-buffered -v \"^$\")",
+      "Bash(npm run:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m ':*)"
+    ]
+  }
+}
