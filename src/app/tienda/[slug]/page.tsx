@@ -23,7 +23,7 @@ export async function generateMetadata(
   const supabase = await createClient();
   const { data: product } = await supabase
     .from("products")
-    .select("name, description, image_url, price")
+    .select("name, description, image_url, images, price")
     .eq("id", slug)
     .single();
 
@@ -32,6 +32,13 @@ export async function generateMetadata(
       title: "Producto no encontrado | GuambraWeb",
     };
   }
+
+  // Primera imagen disponible: images[] > image_url > fallback
+  const productImages = product.images as string[] | null;
+  const firstImage =
+    (productImages && productImages.length > 0 ? productImages[0] : null) ||
+    product.image_url ||
+    "/og-image.jpg";
 
   const title = `${product.name} | GuambraWeb`;
   const description = product.description || `Adquiere ${product.name} en nuestra web. Soluciones al mejor precio.`;
@@ -46,13 +53,13 @@ export async function generateMetadata(
       siteName: "GuambraWeb",
       title,
       description,
-      images: [{ url: product.image_url || "/og-image.jpg", width: 1200, height: 630, alt: product.name }],
+      images: [{ url: firstImage, width: 1200, height: 630, alt: product.name }],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: [product.image_url || "/og-image.jpg"],
+      images: [firstImage],
     },
   };
 }
