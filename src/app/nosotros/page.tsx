@@ -569,7 +569,7 @@ export default function NosotrosPage() {
                   {/* Avatar */}
                   <div
                     className="w-24 h-24 rounded-full overflow-hidden mb-5 ring-4 transition-all duration-300 group-hover:ring-primary/40"
-                    style={{ ringColor: "hsl(var(--border))", background: "hsl(var(--muted))" }}
+                    style={{ background: "hsl(var(--muted))" }}
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={avatar} alt={name} className="w-full h-full object-cover" />
