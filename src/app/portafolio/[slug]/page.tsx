@@ -17,6 +17,7 @@ import {
   Layers,
   ArrowRight,
 } from "lucide-react";
+import { ShareButton } from "@/components/ui/ShareButton";
 
 export const revalidate = 60;
 
@@ -94,9 +95,25 @@ export async function generateMetadata({
     title,
     description,
     openGraph: {
+      type: "website",
+      locale: "es_EC",
+      siteName: "GuambraWeb",
       title,
       description,
-      images: data.cover_image ? [data.cover_image] : [],
+      images: [
+        {
+          url: data.cover_image || "/og-image.jpg",
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [data.cover_image || "/og-image.jpg"],
     },
   };
 }
@@ -241,6 +258,11 @@ export default async function ProjectDetailPage({
                   Ver demo en vivo
                 </a>
               )}
+              <ShareButton
+                title={p.title}
+                text={p.short_description || `Mira este proyecto: ${p.title}`}
+                className="rounded-full px-6 py-3"
+              />
             </div>
           </AnimateOnScroll>
 

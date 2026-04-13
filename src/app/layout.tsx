@@ -57,10 +57,10 @@ export const metadata: Metadata = {
     siteName: "GuambraWeb",
     images: [
       {
-        url: "/social-media.png",
-        width: 1200,
-        height: 630,
-        alt: "GuambraWeb - Innovación en Desarrollo de Software",
+        url: "/og-image.jpg",
+        width: 1080,
+        height: 1080,
+        alt: "GuambraWeb - Software a medida para automatizar tu negocio",
       },
     ],
   },
@@ -69,7 +69,7 @@ export const metadata: Metadata = {
     title: "GuambraWeb | Desarrollo de Software y Soluciones Digitales",
     description:
       "Transformamos ideas en productos digitales de alto rendimiento. Especialistas en Next.js y sistemas cloud.",
-    images: ["/social-media.png"],
+    images: ["/og-image.jpg"],
   },
   robots: {
     index: true,

@@ -6,6 +6,7 @@ import { ArrowLeft, ShoppingCart, CheckCircle2, Cpu, Layers, History, Shield, Ex
 import { AddToCartButton } from "@/components/tienda/AddToCartButton";
 import { ProductGallery } from "@/components/tienda/ProductGallery";
 import ProductSchema from "@/components/seo/ProductSchema";
+import { ShareButton } from "@/components/ui/ShareButton";
 
 type Props = {
   params: Promise<{ slug: string }>
@@ -45,13 +46,13 @@ export async function generateMetadata(
       siteName: "GuambraWeb",
       title,
       description,
-      images: product.image_url ? [{ url: product.image_url, width: 800, height: 600, alt: product.name }] : [],
+      images: [{ url: product.image_url || "/og-image.jpg", width: 1200, height: 630, alt: product.name }],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: product.image_url ? [product.image_url] : [],
+      images: [product.image_url || "/og-image.jpg"],
     },
   };
 }
@@ -180,6 +181,12 @@ export default async function DetalleProductoPage({ params }: Props) {
             <p className="text-xs text-center font-medium text-muted-foreground">
               Transacción 100% segura y encriptada.
             </p>
+
+            <ShareButton
+              title={product.name}
+              text={`${product.name} — $${product.price.toFixed(2)} en GuambraWeb`}
+              className="w-full justify-center rounded-xl py-3"
+            />
           </div>
         </div>
 
