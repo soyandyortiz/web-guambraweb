@@ -31,6 +31,7 @@ const PAGE_TITLES: Record<string, string> = {
   "/admin/ventas/proformas/nueva": "Emitir Proforma",
   // Bio Links
   "/admin/bio-links": "Bio Links",
+  "/admin/portafolio": "Portafolio",
 };
 
 export default function AdminLayout({

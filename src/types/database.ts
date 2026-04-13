@@ -583,6 +583,81 @@ export type Database = {
           },
         ]
       }
+      portfolio_projects: {
+        Row: {
+          id: string
+          title: string
+          slug: string
+          category: string
+          client_name: string | null
+          short_description: string | null
+          problem: string | null
+          solution: string | null
+          features: Json
+          tech_stack: Json
+          cover_image: string | null
+          images: string[] | null
+          results: string[] | null
+          versions: Json
+          demo_url: string | null
+          is_featured: boolean
+          is_published: boolean
+          order_index: number
+          seo_title: string | null
+          seo_description: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          slug: string
+          category?: string
+          client_name?: string | null
+          short_description?: string | null
+          problem?: string | null
+          solution?: string | null
+          features?: Json
+          tech_stack?: Json
+          cover_image?: string | null
+          images?: string[] | null
+          results?: string[] | null
+          versions?: Json
+          demo_url?: string | null
+          is_featured?: boolean
+          is_published?: boolean
+          order_index?: number
+          seo_title?: string | null
+          seo_description?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          slug?: string
+          category?: string
+          client_name?: string | null
+          short_description?: string | null
+          problem?: string | null
+          solution?: string | null
+          features?: Json
+          tech_stack?: Json
+          cover_image?: string | null
+          images?: string[] | null
+          results?: string[] | null
+          versions?: Json
+          demo_url?: string | null
+          is_featured?: boolean
+          is_published?: boolean
+          order_index?: number
+          seo_title?: string | null
+          seo_description?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       products: {
         Row: {
           category_id: string | null

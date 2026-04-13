@@ -25,6 +25,7 @@ import {
   Users2,
   Tags,
   Link2,
+  Layers,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -126,6 +127,12 @@ const NAV_ITEMS: NavItem[] = [
     children: [
       { label: "Leads", href: "/admin/marketing/leads", icon: Users },
     ],
+  },
+  {
+    label: "Portafolio",
+    icon: Layers,
+    href: "/admin/portafolio",
+    accent: "var(--primary)",
   },
   {
     label: "Bio Links",
