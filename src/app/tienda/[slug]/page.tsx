@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, ShoppingCart, CheckCircle2, Cpu, Layers, History, Zap, Shield } from "lucide-react";
+import { ArrowLeft, ShoppingCart, CheckCircle2, Cpu, Layers, History, Shield } from "lucide-react";
 import { AddToCartButton } from "@/components/tienda/AddToCartButton";
 import { ProductGallery } from "@/components/tienda/ProductGallery";
 import ProductSchema from "@/components/seo/ProductSchema";
@@ -142,19 +142,6 @@ export default async function DetalleProductoPage({ params }: Props) {
             {product.description || "Solución de software profesional adaptada a tus necesidades."}
           </div>
 
-          {/* 5. Cuadro informativo de cortesía */}
-          <div className="mb-8 p-6 rounded-2xl bg-primary/5 border border-primary/10 flex gap-4 items-start relative overflow-hidden">
-             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                <Zap size={20} className="fill-current" />
-             </div>
-             <div>
-                <h4 className="font-bold text-sm mb-1 uppercase tracking-wider">Cortesía Premium Incluida</h4>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                   Con tu compra recibes <span className="font-bold text-foreground">6 meses de Hosting, Dominio y Supervisión Técnica</span> 24/7. 
-                   Pasado este tiempo, podrás renovar con un <Link href="/planes" className="underline font-bold">Plan de Mantenimiento</Link> para conservar el soporte.
-                </p>
-             </div>
-          </div>
 
           {/* 4. Botón de agregar al carrito */}
           <div className="mt-2 space-y-6">

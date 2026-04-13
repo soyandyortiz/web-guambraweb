@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
-import { ShoppingBag, Zap } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
 import { CategoryCarousel, type CategoryItem } from "@/components/tienda/CategoryCarousel";
 import { SearchBar } from "@/components/tienda/SearchBar";
 import { Suspense } from "react";
@@ -163,25 +163,6 @@ export default async function TiendaPage({
         </div>
       </section>
       
-      {/* ── Banner de Cortesía ── */}
-      <div className="container max-w-7xl mx-auto px-4 md:px-0 mb-12">
-        <div className="p-6 rounded-3xl bg-primary/5 border border-primary/10 flex flex-col md:flex-row items-center gap-6 relative overflow-hidden group">
-          <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-all" />
-          <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
-            <Zap size={28} className="fill-current animate-pulse" />
-          </div>
-          <div className="flex-1 text-center md:text-left">
-            <h3 className="text-lg font-bold mb-1">¡Garantía Proactiva Incluida!</h3>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              Todos nuestros productos incluyen <span className="font-bold text-primary">6 meses de Hosting, Dominio y Supervisión Técnica</span> GRATIS. 
-              Pasado este tiempo, tu sistema permanecerá activo, pero requerirá un <Link href="/planes" className="font-bold underline">plan de mantenimiento</Link> para conservar la supervisión y garantía técnica.
-            </p>
-          </div>
-          <Link href="/planes" className="btn-secondary btn-sm rounded-xl px-6 font-bold whitespace-nowrap">
-             Saber más
-          </Link>
-        </div>
-      </div>
 
       {/* Error */}
       {error && (
