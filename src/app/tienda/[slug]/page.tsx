@@ -187,19 +187,19 @@ export default async function DetalleProductoPage({ params }: Props) {
 
           {/* Características */}
           {features.length > 0 && (
-            <div className="space-y-4">
+            <div className="space-y-3">
               <h3 className="font-display font-bold text-xl flex items-center gap-2">
                 <Layers size={18} className="text-primary" />
                 Características Principales
               </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <ul className="space-y-2">
                 {features.map((feature, idx) => (
-                  <div key={idx} className="flex items-start gap-3 text-sm font-medium p-3 rounded-xl border bg-card/30">
-                    <CheckCircle2 size={18} className="text-success shrink-0 mt-0.5" />
+                  <li key={idx} className="flex items-start gap-2.5 text-sm">
+                    <CheckCircle2 size={16} className="text-success shrink-0 mt-0.5" />
                     <span>{feature}</span>
-                  </div>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
           )}
 
