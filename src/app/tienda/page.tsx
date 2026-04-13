@@ -2,10 +2,9 @@ import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import { ShoppingBag, Zap } from "lucide-react";
-import { CategoryFilter, type CategoryItem } from "@/components/tienda/CategoryFilter";
+import { CategoryCarousel, type CategoryItem } from "@/components/tienda/CategoryCarousel";
 import { SearchBar } from "@/components/tienda/SearchBar";
 import { Suspense } from "react";
-import { DecorativeAnimation } from "@/components/ui/DecorativeAnimation";
 
 export const metadata: Metadata = {
   title: "Tienda Online | GuambraWeb",
@@ -57,7 +56,7 @@ export default async function TiendaPage({
   /* ── 1. Categorías ────────────────────────────────────────── */
   const { data: categoriesRaw } = await supabase
     .from("categories")
-    .select("id, name, slug, parent_id")
+    .select("id, name, slug, parent_id, image_url")
     .order("name");
 
   const categories: CategoryItem[] = categoriesRaw ?? [];
@@ -143,45 +142,24 @@ export default async function TiendaPage({
 
   /* ────────────────────────────────────────────────────────── */
   return (
-    <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-16">
-      {/* ── 1. Hero Compacto y Categorías ── */}
-      <section className="flex flex-col items-center justify-center text-center py-10 md:py-16 px-4 mb-10 md:mb-16 min-h-[40vh] max-h-[70vh] rounded-3xl relative overflow-hidden">
-        <DecorativeAnimation type="ecommerce" count={12} />
-        {/* Decorative background elements */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-primary/5 blur-[100px] rounded-full pointer-events-none" />
-        
-        <div className="relative z-10 w-full max-w-4xl mx-auto flex flex-col items-center">
-          <h1
-            className="text-4xl md:text-5xl lg:text-6xl font-display font-bold tracking-tight mb-4"
-            style={{ color: "hsl(var(--foreground))" }}
-          >
-            Nuestra <span className="gradient-text">Tienda</span>
-          </h1>
-          <p
-            className="text-base md:text-xl max-w-2xl mx-auto mb-10"
-            style={{ color: "hsl(var(--muted-foreground))" }}
-          >
-            Descubre los mejores productos y servicios de desarrollo web en Ecuador
-          </p>
-
-          {/* ── 2. Buscador ── */}
-          <div className="w-full max-w-2xl mx-auto mb-10 shadow-lg shadow-black/5 dark:shadow-white/5 rounded-2xl">
+    <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-12">
+      {/* ── 1. Carrusel de categorías + Buscador ── */}
+      <section className="mb-10">
+        {categories.length > 0 && (
+          <div className="mb-5">
             <Suspense>
-              <SearchBar initialValue={searchTerm} />
+              <CategoryCarousel
+                categories={categories}
+                activeSlug={categoriaSlug ?? null}
+              />
             </Suspense>
           </div>
+        )}
 
-          {/* ── 3. Categorías Visuales ── */}
-          {categories.length > 0 && (
-            <div className="w-full">
-              <Suspense>
-                <CategoryFilter
-                  categories={categories}
-                  activeSlug={categoriaSlug ?? null}
-                />
-              </Suspense>
-            </div>
-          )}
+        <div className="max-w-2xl mx-auto rounded-2xl shadow-sm">
+          <Suspense>
+            <SearchBar initialValue={searchTerm} />
+          </Suspense>
         </div>
       </section>
       
