@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, ShoppingCart, CheckCircle2, Cpu, Layers, History, Shield } from "lucide-react";
+import { ArrowLeft, ShoppingCart, CheckCircle2, Cpu, Layers, History, Shield, ExternalLink } from "lucide-react";
 import { AddToCartButton } from "@/components/tienda/AddToCartButton";
 import { ProductGallery } from "@/components/tienda/ProductGallery";
 import ProductSchema from "@/components/seo/ProductSchema";
@@ -143,25 +143,42 @@ export default async function DetalleProductoPage({ params }: Props) {
           </div>
 
 
-          {/* 4. Botón de agregar al carrito */}
-          <div className="mt-2 space-y-6">
+          {/* 4. Botón Demo + Agregar al carrito */}
+          <div className="mt-2 space-y-3">
+            {productAny.demo_url && (
+              <a
+                href={productAny.demo_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2.5 text-base transition-all duration-200 border-2 hover:opacity-80"
+                style={{
+                  borderColor: "hsl(var(--primary))",
+                  color: "hsl(var(--primary))",
+                  background: "hsl(var(--primary) / 0.06)",
+                }}
+              >
+                <ExternalLink size={18} />
+                Ver Demo en Vivo
+              </a>
+            )}
+
             {!product.is_active ? (
               <button disabled className="w-full py-4 rounded-xl font-bold flex items-center justify-center gap-3 text-lg transition-all opacity-50 cursor-not-allowed bg-muted text-muted-foreground">
-                 Agotado
+                Agotado
               </button>
             ) : (
-              <AddToCartButton 
+              <AddToCartButton
                 product={{
                   id: product.id,
                   name: product.name,
                   price: product.price,
                   image_url: allImages[0] || null,
-                }} 
+                }}
               />
             )}
-            
+
             <p className="text-xs text-center font-medium text-muted-foreground">
-               Transacción 100% segura y encriptada.
+              Transacción 100% segura y encriptada.
             </p>
           </div>
         </div>
