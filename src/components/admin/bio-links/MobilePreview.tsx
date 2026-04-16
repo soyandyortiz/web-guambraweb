@@ -34,14 +34,16 @@ function BlockPreview({ block, template }: { block: BioBlock; template: string }
   }
 
   if (block.type === "text") {
+    // Strip HTML tags for the tiny preview
+    const plainText = block.content?.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() ?? "";
     return (
       <div className="w-full px-1">
         {block.title && (
           <p style={{ color: fg, fontSize: 9, fontWeight: 700, marginBottom: 2 }}>{block.title}</p>
         )}
-        {block.content && (
+        {plainText && (
           <p style={{ color: `${fg}bb`, fontSize: 8, lineHeight: 1.4 }} className="line-clamp-2">
-            {block.content}
+            {plainText}
           </p>
         )}
       </div>
@@ -75,6 +77,7 @@ function BlockPreview({ block, template }: { block: BioBlock; template: string }
   // button (default)
   const bg = block.bg_color ?? "#4361ee";
   const bfg = block.text_color ?? "#ffffff";
+  const hasCollapsible = !!block.content?.replace(/<[^>]*>/g, "").trim();
   return (
     <div
       className="w-full rounded-lg flex items-center gap-2"
@@ -84,7 +87,10 @@ function BlockPreview({ block, template }: { block: BioBlock; template: string }
       <span style={{ fontSize: 8, fontWeight: 600, flex: 1 }} className="truncate">
         {block.title ?? "Enlace"}
       </span>
-      <span style={{ fontSize: 7, opacity: 0.7 }}>›</span>
+      {hasCollapsible
+        ? <span style={{ fontSize: 8, opacity: 0.8 }}>⌄</span>
+        : <span style={{ fontSize: 7, opacity: 0.7 }}>›</span>
+      }
     </div>
   );
 }

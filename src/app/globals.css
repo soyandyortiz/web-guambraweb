@@ -749,3 +749,22 @@
     transform: rotate(360deg);
   }
 }
+
+/* ── Rich text content (bio blocks) ─────────────────────────── */
+.bio-rich ul,
+.bio-rich ol {
+  padding-left: 1.4em;
+  margin: 0.35em 0;
+}
+.bio-rich ul { list-style: disc; }
+.bio-rich ol { list-style: decimal; }
+.bio-rich li { margin: 0.18em 0; }
+.bio-rich a { text-decoration: underline; opacity: 0.9; }
+.bio-rich strong,
+.bio-rich b { font-weight: 700; }
+.bio-rich em,
+.bio-rich i { font-style: italic; }
+.bio-rich u { text-decoration: underline; }
+.bio-rich p { margin: 0.25em 0; }
+.bio-rich p:first-child { margin-top: 0; }
+.bio-rich p:last-child { margin-bottom: 0; }

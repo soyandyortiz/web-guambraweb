@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import {
   Plus, Pencil, Trash2, ChevronUp, ChevronDown,
   LayoutGrid, User, Palette, BarChart2, GripVertical,
@@ -52,16 +52,50 @@ export function BioLinksManager({ initialProfile, initialBlocks, totalVisits, an
   const [savingDesign, setSavingDesign] = useState(false);
   const [designMsg, setDesignMsg] = useState<string | null>(null);
 
+  // Drag and drop state
+  const [draggingIdx, setDraggingIdx] = useState<number | null>(null);
+  const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
+
+  // Scroll position preservation
+  const savedScroll = useRef(0);
+
+  function openEditor(block: Partial<BioBlock>, creating: boolean) {
+    savedScroll.current = window.scrollY;
+    setEditingBlock(block);
+    setIsCreating(creating);
+  }
+
+  function closeEditor() {
+    setEditingBlock(null);
+    setIsCreating(false);
+    // Restore scroll after React re-render + any router update from revalidatePath
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        window.scrollTo(0, savedScroll.current);
+      });
+    });
+  }
+
   async function handleSaveBlock(data: Partial<BioBlock>) {
     if (editingBlock?.id) {
       const res = await updateBioBlock(editingBlock.id, data);
       if (res.success) {
-        setBlocks((prev) => prev.map((b) => (b.id === editingBlock.id ? { ...b, ...data } : b)));
+        setBlocks((prev) =>
+          prev.map((b) => (b.id === editingBlock.id ? { ...b, ...data } : b))
+        );
       }
     } else {
-      const nextOrder = blocks.length > 0 ? Math.max(...blocks.map((b) => b.sort_order)) + 1 : 0;
-      const res = await createBioBlock({ ...data, sort_order: nextOrder } as Omit<BioBlock, "id" | "clicks" | "created_at">);
-      if (res.success) window.location.reload();
+      const nextOrder =
+        blocks.length > 0
+          ? Math.max(...blocks.map((b) => b.sort_order)) + 1
+          : 0;
+      const res = await createBioBlock({
+        ...data,
+        sort_order: nextOrder,
+      } as Omit<BioBlock, "id" | "clicks" | "created_at">);
+      if (res.success && "block" in res && res.block) {
+        setBlocks((prev) => [...prev, res.block!]);
+      }
     }
   }
 
@@ -77,7 +111,11 @@ export function BioLinksManager({ initialProfile, initialBlocks, totalVisits, an
     setTogglingId(block.id);
     const res = await updateBioBlock(block.id, { is_active: !block.is_active });
     if (res.success) {
-      setBlocks((prev) => prev.map((b) => (b.id === block.id ? { ...b, is_active: !b.is_active } : b)));
+      setBlocks((prev) =>
+        prev.map((b) =>
+          b.id === block.id ? { ...b, is_active: !b.is_active } : b
+        )
+      );
     }
     setTogglingId(null);
   }
@@ -94,6 +132,23 @@ export function BioLinksManager({ initialProfile, initialBlocks, totalVisits, an
     if (index === blocks.length - 1) return;
     const next = [...blocks];
     [next[index], next[index + 1]] = [next[index + 1], next[index]];
+    setBlocks(next);
+    await reorderBioBlocks(next.map((b) => b.id));
+  }
+
+  // ── Drag and drop ───────────────────────────────────────────────
+  async function handleDrop(targetIdx: number) {
+    if (draggingIdx === null || draggingIdx === targetIdx) {
+      setDraggingIdx(null);
+      setDragOverIdx(null);
+      return;
+    }
+    const from = draggingIdx;
+    setDraggingIdx(null);
+    setDragOverIdx(null);
+    const next = [...blocks];
+    const [moved] = next.splice(from, 1);
+    next.splice(targetIdx, 0, moved);
     setBlocks(next);
     await reorderBioBlocks(next.map((b) => b.id));
   }
@@ -123,7 +178,10 @@ export function BioLinksManager({ initialProfile, initialBlocks, totalVisits, an
   return (
     <div className="flex flex-col gap-5">
       {/* Tab bar */}
-      <div className="flex gap-1 p-1 rounded-xl" style={{ background: "hsl(var(--muted))" }}>
+      <div
+        className="flex gap-1 p-1 rounded-xl"
+        style={{ background: "hsl(var(--muted))" }}
+      >
         {TABS.map(({ id, label, Icon }) => (
           <button
             key={id}
@@ -132,7 +190,11 @@ export function BioLinksManager({ initialProfile, initialBlocks, totalVisits, an
             className="flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-sm font-medium transition-all"
             style={
               tab === id
-                ? { background: "hsl(var(--background))", color: "hsl(var(--foreground))", boxShadow: "0 1px 4px rgba(0,0,0,0.08)" }
+                ? {
+                    background: "hsl(var(--background))",
+                    color: "hsl(var(--foreground))",
+                    boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
+                  }
                 : { color: "hsl(var(--muted-foreground))" }
             }
           >
@@ -150,12 +212,15 @@ export function BioLinksManager({ initialProfile, initialBlocks, totalVisits, an
           {tab === "blocks" && (
             <div className="flex flex-col gap-4">
               <div className="flex items-center justify-between">
-                <p className="text-sm" style={{ color: "hsl(var(--muted-foreground))" }}>
+                <p
+                  className="text-sm"
+                  style={{ color: "hsl(var(--muted-foreground))" }}
+                >
                   {blocks.length} bloque{blocks.length !== 1 ? "s" : ""}
                 </p>
                 <button
                   type="button"
-                  onClick={() => { setEditingBlock({}); setIsCreating(true); }}
+                  onClick={() => openEditor({}, true)}
                   className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-opacity hover:opacity-90"
                   style={{ background: "hsl(var(--primary))", color: "#fff" }}
                 >
@@ -166,16 +231,31 @@ export function BioLinksManager({ initialProfile, initialBlocks, totalVisits, an
               {blocks.length === 0 ? (
                 <div
                   className="flex flex-col items-center justify-center py-12 rounded-2xl text-center"
-                  style={{ background: "hsl(var(--muted) / 0.5)", border: "2px dashed hsl(var(--border))" }}
+                  style={{
+                    background: "hsl(var(--muted) / 0.5)",
+                    border: "2px dashed hsl(var(--border))",
+                  }}
                 >
-                  <LayoutGrid size={32} style={{ color: "hsl(var(--muted-foreground))" }} className="mb-3" />
-                  <p className="text-sm font-medium mb-1" style={{ color: "hsl(var(--foreground))" }}>Sin bloques aún</p>
-                  <p className="text-xs mb-4" style={{ color: "hsl(var(--muted-foreground))" }}>
+                  <LayoutGrid
+                    size={32}
+                    style={{ color: "hsl(var(--muted-foreground))" }}
+                    className="mb-3"
+                  />
+                  <p
+                    className="text-sm font-medium mb-1"
+                    style={{ color: "hsl(var(--foreground))" }}
+                  >
+                    Sin bloques aún
+                  </p>
+                  <p
+                    className="text-xs mb-4"
+                    style={{ color: "hsl(var(--muted-foreground))" }}
+                  >
                     Agrega botones, cards, texto o videos
                   </p>
                   <button
                     type="button"
-                    onClick={() => { setEditingBlock({}); setIsCreating(true); }}
+                    onClick={() => openEditor({}, true)}
                     className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold"
                     style={{ background: "hsl(var(--primary))", color: "#fff" }}
                   >
@@ -184,59 +264,166 @@ export function BioLinksManager({ initialProfile, initialBlocks, totalVisits, an
                 </div>
               ) : (
                 <div className="flex flex-col gap-2">
-                  {blocks.map((block, i) => (
-                    <div
-                      key={block.id}
-                      className="flex items-center gap-3 p-3 rounded-xl transition-all"
-                      style={{ ...cardBase, opacity: block.is_active ? 1 : 0.55 }}
-                    >
-                      <GripVertical size={14} style={{ color: "hsl(var(--muted-foreground))", flexShrink: 0 }} />
-                      <span
-                        className="text-xs font-bold px-2 py-0.5 rounded-full flex-shrink-0"
-                        style={{ background: "hsl(var(--primary) / 0.1)", color: "hsl(var(--primary))" }}
-                      >
-                        {TYPE_LABELS[block.type] ?? block.type}
-                      </span>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium truncate" style={{ color: "hsl(var(--foreground))" }}>
-                          {block.title ?? "(sin título)"}
-                        </p>
-                        {block.url && (
-                          <p className="text-xs truncate" style={{ color: "hsl(var(--muted-foreground))" }}>
-                            {block.url}
-                          </p>
-                        )}
-                      </div>
-                      <span className="text-xs font-semibold flex-shrink-0" style={{ color: "hsl(var(--muted-foreground))" }}>
-                        {block.clicks} clics
-                      </span>
-                      <div className="flex items-center gap-1 flex-shrink-0">
-                        <button type="button" onClick={() => handleMoveUp(i)} disabled={i === 0} className="p-1.5 rounded-lg hover:opacity-70 disabled:opacity-20">
-                          <ChevronUp size={13} style={{ color: "hsl(var(--muted-foreground))" }} />
-                        </button>
-                        <button type="button" onClick={() => handleMoveDown(i)} disabled={i === blocks.length - 1} className="p-1.5 rounded-lg hover:opacity-70 disabled:opacity-20">
-                          <ChevronDown size={13} style={{ color: "hsl(var(--muted-foreground))" }} />
-                        </button>
-                        <button type="button" onClick={() => handleToggle(block)} disabled={togglingId === block.id} className="p-1.5 rounded-lg hover:opacity-70 disabled:opacity-50">
-                          {togglingId === block.id
-                            ? <Loader2 size={13} className="animate-spin" style={{ color: "hsl(var(--muted-foreground))" }} />
+                  {blocks.map((block, i) => {
+                    const isDragging = draggingIdx === i;
+                    const isOver = dragOverIdx === i && draggingIdx !== i;
+
+                    return (
+                      <div
+                        key={block.id}
+                        draggable
+                        onDragStart={(e) => {
+                          setDraggingIdx(i);
+                          e.dataTransfer.effectAllowed = "move";
+                          // Required for Firefox
+                          e.dataTransfer.setData("text/plain", String(i));
+                        }}
+                        onDragOver={(e) => {
+                          e.preventDefault();
+                          e.dataTransfer.dropEffect = "move";
+                          if (dragOverIdx !== i) setDragOverIdx(i);
+                        }}
+                        onDrop={async (e) => {
+                          e.preventDefault();
+                          await handleDrop(i);
+                        }}
+                        onDragEnd={() => {
+                          setDraggingIdx(null);
+                          setDragOverIdx(null);
+                        }}
+                        className="flex items-center gap-3 p-3 rounded-xl transition-all"
+                        style={{
+                          ...cardBase,
+                          opacity: isDragging
+                            ? 0.4
                             : block.is_active
-                              ? <Eye size={13} style={{ color: "hsl(var(--primary))" }} />
-                              : <EyeOff size={13} style={{ color: "hsl(var(--muted-foreground))" }} />
-                          }
-                        </button>
-                        <button type="button" onClick={() => { setEditingBlock(block); setIsCreating(false); }} className="p-1.5 rounded-lg hover:opacity-70">
-                          <Pencil size={13} style={{ color: "hsl(var(--muted-foreground))" }} />
-                        </button>
-                        <button type="button" onClick={() => handleDelete(block.id)} disabled={deletingId === block.id} className="p-1.5 rounded-lg hover:opacity-70 disabled:opacity-50">
-                          {deletingId === block.id
-                            ? <Loader2 size={13} className="animate-spin" style={{ color: "hsl(0 84% 60%)" }} />
-                            : <Trash2 size={13} style={{ color: "hsl(0 84% 60%)" }} />
-                          }
-                        </button>
+                              ? 1
+                              : 0.55,
+                          cursor: "grab",
+                          outline: isOver
+                            ? "2px solid hsl(var(--primary))"
+                            : undefined,
+                          transform: isOver ? "scale(1.01)" : undefined,
+                        }}
+                      >
+                        <GripVertical
+                          size={14}
+                          style={{
+                            color: "hsl(var(--muted-foreground))",
+                            flexShrink: 0,
+                          }}
+                        />
+                        <span
+                          className="text-xs font-bold px-2 py-0.5 rounded-full flex-shrink-0"
+                          style={{
+                            background: "hsl(var(--primary) / 0.1)",
+                            color: "hsl(var(--primary))",
+                          }}
+                        >
+                          {TYPE_LABELS[block.type] ?? block.type}
+                        </span>
+                        <div className="flex-1 min-w-0">
+                          <p
+                            className="text-sm font-medium truncate"
+                            style={{ color: "hsl(var(--foreground))" }}
+                          >
+                            {block.title ?? "(sin título)"}
+                          </p>
+                          {block.url && (
+                            <p
+                              className="text-xs truncate"
+                              style={{ color: "hsl(var(--muted-foreground))" }}
+                            >
+                              {block.url}
+                            </p>
+                          )}
+                        </div>
+                        <span
+                          className="text-xs font-semibold flex-shrink-0"
+                          style={{ color: "hsl(var(--muted-foreground))" }}
+                        >
+                          {block.clicks} clics
+                        </span>
+                        <div className="flex items-center gap-1 flex-shrink-0">
+                          <button
+                            type="button"
+                            onClick={() => handleMoveUp(i)}
+                            disabled={i === 0}
+                            className="p-1.5 rounded-lg hover:opacity-70 disabled:opacity-20"
+                          >
+                            <ChevronUp
+                              size={13}
+                              style={{ color: "hsl(var(--muted-foreground))" }}
+                            />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleMoveDown(i)}
+                            disabled={i === blocks.length - 1}
+                            className="p-1.5 rounded-lg hover:opacity-70 disabled:opacity-20"
+                          >
+                            <ChevronDown
+                              size={13}
+                              style={{ color: "hsl(var(--muted-foreground))" }}
+                            />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleToggle(block)}
+                            disabled={togglingId === block.id}
+                            className="p-1.5 rounded-lg hover:opacity-70 disabled:opacity-50"
+                          >
+                            {togglingId === block.id ? (
+                              <Loader2
+                                size={13}
+                                className="animate-spin"
+                                style={{ color: "hsl(var(--muted-foreground))" }}
+                              />
+                            ) : block.is_active ? (
+                              <Eye
+                                size={13}
+                                style={{ color: "hsl(var(--primary))" }}
+                              />
+                            ) : (
+                              <EyeOff
+                                size={13}
+                                style={{ color: "hsl(var(--muted-foreground))" }}
+                              />
+                            )}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => openEditor(block, false)}
+                            className="p-1.5 rounded-lg hover:opacity-70"
+                          >
+                            <Pencil
+                              size={13}
+                              style={{ color: "hsl(var(--muted-foreground))" }}
+                            />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDelete(block.id)}
+                            disabled={deletingId === block.id}
+                            className="p-1.5 rounded-lg hover:opacity-70 disabled:opacity-50"
+                          >
+                            {deletingId === block.id ? (
+                              <Loader2
+                                size={13}
+                                className="animate-spin"
+                                style={{ color: "hsl(0 84% 60%)" }}
+                              />
+                            ) : (
+                              <Trash2
+                                size={13}
+                                style={{ color: "hsl(0 84% 60%)" }}
+                              />
+                            )}
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -251,26 +438,55 @@ export function BioLinksManager({ initialProfile, initialBlocks, totalVisits, an
           {tab === "design" && (
             <div className="flex flex-col gap-6">
               <div>
-                <p className="text-sm font-semibold mb-3" style={{ color: "hsl(var(--foreground))" }}>Template</p>
+                <p
+                  className="text-sm font-semibold mb-3"
+                  style={{ color: "hsl(var(--foreground))" }}
+                >
+                  Template
+                </p>
                 <TemplatePicker
                   value={(profile.template as BioTemplate) ?? "minimal"}
                   onChange={(t) => setProfile((p) => ({ ...p, template: t }))}
                 />
               </div>
               <div>
-                <p className="text-sm font-semibold mb-2" style={{ color: "hsl(var(--foreground))" }}>Color de acento</p>
+                <p
+                  className="text-sm font-semibold mb-2"
+                  style={{ color: "hsl(var(--foreground))" }}
+                >
+                  Color de acento
+                </p>
                 <div className="flex items-center gap-3">
-                  <input type="color" value={profile.cover_color ?? "#4361ee"} onChange={(e) => setProfile((p) => ({ ...p, cover_color: e.target.value }))} className="w-10 h-10 rounded-xl cursor-pointer border-0 p-0" />
+                  <input
+                    type="color"
+                    value={profile.cover_color ?? "#4361ee"}
+                    onChange={(e) =>
+                      setProfile((p) => ({ ...p, cover_color: e.target.value }))
+                    }
+                    className="w-10 h-10 rounded-xl cursor-pointer border-0 p-0"
+                  />
                   <input
                     className="flex-1 px-3 py-2 rounded-xl text-sm border outline-none"
-                    style={{ background: "hsl(var(--muted))", borderColor: "hsl(var(--border))", color: "hsl(var(--foreground))" }}
+                    style={{
+                      background: "hsl(var(--muted))",
+                      borderColor: "hsl(var(--border))",
+                      color: "hsl(var(--foreground))",
+                    }}
                     value={profile.cover_color ?? "#4361ee"}
-                    onChange={(e) => setProfile((p) => ({ ...p, cover_color: e.target.value }))}
+                    onChange={(e) =>
+                      setProfile((p) => ({ ...p, cover_color: e.target.value }))
+                    }
                   />
                 </div>
               </div>
               {designMsg && (
-                <p className="text-xs px-3 py-2 rounded-lg" style={{ background: "hsl(var(--primary) / 0.1)", color: "hsl(var(--primary))" }}>
+                <p
+                  className="text-xs px-3 py-2 rounded-lg"
+                  style={{
+                    background: "hsl(var(--primary) / 0.1)",
+                    color: "hsl(var(--primary))",
+                  }}
+                >
                   {designMsg}
                 </p>
               )}
@@ -281,7 +497,9 @@ export function BioLinksManager({ initialProfile, initialBlocks, totalVisits, an
                 className="w-full py-2.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-opacity hover:opacity-90 disabled:opacity-50"
                 style={{ background: "hsl(var(--primary))", color: "#fff" }}
               >
-                {savingDesign && <Loader2 size={14} className="animate-spin" />}
+                {savingDesign && (
+                  <Loader2 size={14} className="animate-spin" />
+                )}
                 {savingDesign ? "Guardando…" : "Guardar diseño"}
               </button>
             </div>
@@ -289,13 +507,20 @@ export function BioLinksManager({ initialProfile, initialBlocks, totalVisits, an
 
           {/* ── ESTADÍSTICAS ───────────────────────────────── */}
           {tab === "stats" && (
-            <AnalyticsDashboard totalVisits={totalVisits} blocks={analyticsBlocks} />
+            <AnalyticsDashboard
+              totalVisits={totalVisits}
+              blocks={analyticsBlocks}
+            />
           )}
         </div>
 
         {/* Preview sidebar */}
         <div className="hidden lg:block sticky top-6 flex-shrink-0">
-          <MobilePreview profile={profile} blocks={blocks} template={profile.template ?? "minimal"} />
+          <MobilePreview
+            profile={profile}
+            blocks={blocks}
+            template={profile.template ?? "minimal"}
+          />
         </div>
       </div>
 
@@ -304,7 +529,7 @@ export function BioLinksManager({ initialProfile, initialBlocks, totalVisits, an
         <BlockEditor
           block={isCreating ? undefined : editingBlock}
           onSave={handleSaveBlock}
-          onClose={() => { setEditingBlock(null); setIsCreating(false); }}
+          onClose={closeEditor}
         />
       )}
     </div>

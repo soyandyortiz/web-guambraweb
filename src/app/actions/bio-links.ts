@@ -90,10 +90,10 @@ export async function getBioBlocks(): Promise<BioBlock[]> {
 
 export async function createBioBlock(payload: Omit<BioBlock, "id" | "clicks" | "created_at">) {
   const supabase = await createClient();
-  const { error } = await supabase.from("bio_blocks").insert(payload);
+  const { data, error } = await supabase.from("bio_blocks").insert(payload).select().single();
   if (error) return { success: false, message: error.message };
   REVALIDATE();
-  return { success: true };
+  return { success: true, block: data as BioBlock };
 }
 
 export async function updateBioBlock(id: string, payload: Partial<Omit<BioBlock, "id" | "clicks" | "created_at">>) {
